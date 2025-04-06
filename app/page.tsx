@@ -19,7 +19,7 @@ import type { ShareClass, FundHolding, ExitScenario, WaterfallResult } from "./t
 import { calculateWaterfall } from "./utils/waterfall-calculator"
 
 export default function WaterfallAnalysis() {
-  const [activeTab, setActiveTab] = useState("results")
+  const [activeTab, setActiveTab] = useState("inputs")
   const [shareClasses, setShareClasses] = useState<ShareClass[]>([
     {
       id: "1",
@@ -161,8 +161,8 @@ export default function WaterfallAnalysis() {
         </div>
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList>
           <TabsTrigger value="inputs">Inputs</TabsTrigger>
           <TabsTrigger value="results">Results</TabsTrigger>
         </TabsList>
