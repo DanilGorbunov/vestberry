@@ -66,7 +66,7 @@ export function WaterfallResults({ results, shareClasses, fundHoldings, exitScen
         </CardHeader>
         <CardContent>
           {selectedResult && (
-            <Tabs defaultValue="share-classes">
+            <Tabs defaultValue="funds">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger value="share-classes">Share Classes</TabsTrigger>
                 <TabsTrigger value="funds">Funds</TabsTrigger>
