@@ -19,7 +19,7 @@ import type { ShareClass, FundHolding, ExitScenario, WaterfallResult } from "./t
 import { calculateWaterfall } from "./utils/waterfall-calculator"
 
 export default function WaterfallAnalysis() {
-  const [activeTab, setActiveTab] = useState("inputs")
+  const [activeTab, setActiveTab] = useState("results")
   const [shareClasses, setShareClasses] = useState<ShareClass[]>([
     {
       id: "1",
@@ -67,11 +67,18 @@ export default function WaterfallAnalysis() {
   ])
 
   const [results, setResults] = useState<WaterfallResult[]>([])
+  const [selectedScenario, setSelectedScenario] = useState<string>("1")
 
+  // Calculate waterfall results on component mount
+  useEffect(() => {
+    const calculatedResults = calculateWaterfall(shareClasses, fundHoldings, exitScenarios)
+    setResults(calculatedResults)
+  }, [])
+
+  // Function to recalculate waterfall
   const handleCalculate = () => {
     const calculatedResults = calculateWaterfall(shareClasses, fundHoldings, exitScenarios)
     setResults(calculatedResults)
-    setActiveTab("results")
   }
 
   const handleGenerateScenarios = () => {
@@ -352,12 +359,32 @@ export default function WaterfallAnalysis() {
         </TabsContent>
 
         <TabsContent value="results">
-          <WaterfallResults
-            results={results}
-            shareClasses={shareClasses}
-            fundHoldings={fundHoldings}
-            exitScenarios={exitScenarios}
-          />
+          <div className="space-y-4">
+            <div className="flex justify-between items-center">
+              <h2 className="text-xl font-semibold">Exit Scenario Results</h2>
+              <Select value={selectedScenario} onValueChange={setSelectedScenario}>
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select scenario" />
+                </SelectTrigger>
+                <SelectContent>
+                  {exitScenarios.map((scenario) => (
+                    <SelectItem key={scenario.id} value={scenario.id}>
+                      Exit Value: ${scenario.exitValue.toLocaleString()}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {results.length > 0 && (
+              <WaterfallResults
+                results={results.filter(r => r.scenarioId === selectedScenario)}
+                shareClasses={shareClasses}
+                fundHoldings={fundHoldings}
+                exitScenarios={exitScenarios}
+              />
+            )}
+          </div>
         </TabsContent>
       </Tabs>
     </div>
